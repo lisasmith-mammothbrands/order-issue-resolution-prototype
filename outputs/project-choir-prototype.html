@@ -35,7 +35,7 @@ const $=id=>document.getElementById(id);const esc=s=>String(s).replace(/[&<>"']/
 const panel=s=>`<section class="panel">${s}</section>`;const row=(a,b)=>`<div class="summary-row"><span>${a}</span><strong>${b}</strong></div>`;
 function order(){return orders[state.orderId]}function selectedItems(){return state.itemIndices.map(n=>order().items[n]).filter(Boolean)}function itemNames(){return selectedItems().map(i=>i.name).join(', ')}function issueLabel(){return issues.find(x=>x[0]===state.issue)?.[1]||''}
 function choiceLabel(k){return {delivery:'Same-day delivery with DoorDash',pickup:'Local store pickup through DoorDash',reship:'Expedited replacement',return:'Return for a refund',refund:'Refund this item'}[k]}
-function choices(){return state.issue==='other'?[]:['delivery','pickup','reship','return','refund']}
+function choices(){if(state.issue==='other')return [];if(state.issue==='return')return ['return'];return ['delivery','pickup','reship','refund']}
 function setStep(n){state.step=n;render();window.scrollTo({top:0,behavior:'smooth'})}
 function startOver(){state.step=0;state.mode='account';state.orderId=null;state.itemIndices=[0];state.issue=null;state.details='';state.choice=null;state.storeIndex=0;render()}
 function render(){

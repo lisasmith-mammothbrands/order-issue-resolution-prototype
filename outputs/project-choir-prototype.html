@@ -30,14 +30,14 @@ const availability={
   reship:{store:'Target Helena',delivery:'Today, 5:00–7:00 PM',pickupStores:[{name:'Target Helena',distance:'3.2 miles',window:'Today, 4:00–6:00 PM'},{name:'Target Helena North',distance:'5.8 miles',window:'Today, 5:30–7:30 PM'}]}
 };
 const issues=[['damaged','Arrived damaged'],['wrong','I received the wrong item'],['missing','Package never arrived'],['return','I want to return it'],['other','Other']];
-const state={step:0,mode:'account',orderId:null,itemIndices:[0],issue:null,details:'',choice:null,storeIndex:0};
+const state={step:0,mode:'account',orderId:null,itemIndices:[],issue:null,details:'',choice:null,storeIndex:0};
 const $=id=>document.getElementById(id);const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const panel=s=>`<section class="panel">${s}</section>`;const row=(a,b)=>`<div class="summary-row"><span>${a}</span><strong>${b}</strong></div>`;
 function order(){return orders[state.orderId]}function selectedItems(){return state.itemIndices.map(n=>order().items[n]).filter(Boolean)}function itemNames(){return selectedItems().map(i=>i.name).join(', ')}function issueLabel(){return issues.find(x=>x[0]===state.issue)?.[1]||''}
 function choiceLabel(k){return {delivery:'Same-day delivery with DoorDash',pickup:'Local store pickup through DoorDash',reship:'Expedited replacement',return:'Return for a refund',refund:'Refund this item'}[k]}
 function choices(){if(state.issue==='other')return [];if(state.issue==='return')return ['return'];return ['delivery','pickup','reship','refund']}
 function setStep(n){state.step=n;render();window.scrollTo({top:0,behavior:'smooth'})}
-function startOver(){state.step=0;state.mode='account';state.orderId=null;state.itemIndices=[0];state.issue=null;state.details='';state.choice=null;state.storeIndex=0;render()}
+function startOver(){state.step=0;state.mode='account';state.orderId=null;state.itemIndices=[];state.issue=null;state.details='';state.choice=null;state.storeIndex=0;render()}
 function render(){
   const other=state.issue==='other';
   const names=other?['Find your order','Tell us what happened','Contact Customer Care']:['Find your order','Tell us what happened','Choose a solution','Review'];
@@ -57,7 +57,7 @@ function render(){
   if(state.step===4)renderDone();
 }
 function selectOrder(id){
-  state.orderId=id;state.itemIndices=[0];state.issue=null;state.details='';state.choice=null;state.storeIndex=0;setStep(1);
+  state.orderId=id;state.itemIndices=orders[id].items.length>1?[]:[0];state.issue=null;state.details='';state.choice=null;state.storeIndex=0;setStep(1);
 }
 function renderFind(){
   const account=state.mode==='account';
